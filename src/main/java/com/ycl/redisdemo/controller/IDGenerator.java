@@ -31,7 +31,7 @@ public class IDGenerator {
      */
     private String getHostName() throws UnknownHostException {
         //OsInfoUtils.getLocalHostName();
-        int i = (int) (Math.random() * 10);
+        int i = (int) (Math.random() * 5);
         InetAddress localHost = InetAddress.getLocalHost();
         String hostName = localHost.getHostName();
         return hostName + i;
@@ -53,8 +53,7 @@ public class IDGenerator {
                     String initValue = (String) operations.get(key);
                     long incrCount = operations.increment(hostName + "_incr_count", stepNum);
                     long param = Long.valueOf(initValue) + incrCount;
-                    operations.set(hostName + "incrCount", incrCount + "");
-                    System.out.println(param);
+                    System.out.println(hostName + ":" + param);
                     return "" + param;
                 }
 
@@ -63,17 +62,15 @@ public class IDGenerator {
             {  //不存在
                 long incrCount = operations.increment(hostName + "_incr_count", stepNum);
                 long param = initValueArray[hostCount] + incrCount;
-                operations.set(hostName + "incrCount", incrCount + "");
                 operations.set("test:hostname:" + hostName, initValueArray[hostCount]);
-                System.out.println(param);
+                System.out.println(hostName + ":" + param);
                 return "" + param;
             }
         } else {//第一个
             long incrCount = operations.increment(hostName + "_incr_count", stepNum);
             long param = initValueArray[0] + incrCount;
-            operations.set(hostName + "incrCount", incrCount + "");
             operations.set("test:hostname:" + hostName, initValueArray[0]);
-            System.out.println(param);
+            System.out.println(hostName + ":" + param);
             return "" + param;
         }
     }
