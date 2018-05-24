@@ -26,11 +26,28 @@ public class TestController {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private IDGenerator idGenerator;
+
     @GetMapping("/generateId")
     public Map<String, String> generateId() {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         String aaa = operations.get("aaa");
+        idGenerator.main();
         return Collections.singletonMap("id", aaa);
+
+    }
+
+    @GetMapping("/getkey")
+    public void getKeys() {
+        Set<String> keys = redisTemplate.keys("edj:hostname:*");
+        if (keys != null) {
+            for (String key : keys) {
+                String s = redisTemplate.opsForValue().get(key);
+                System.out.println(s);
+            }
+        }
+
     }
 
     public Long generateId(String key, Date date) {
