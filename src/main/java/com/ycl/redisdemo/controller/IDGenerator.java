@@ -17,9 +17,6 @@ import java.util.concurrent.Executors;
 @RestController
 public class IDGenerator {
 
-    private static String year = String.valueOf(LocalDateTime.now().getYear()).substring(2);
-    private static final long twepoch = Long.valueOf(year + "000000001");
-
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -72,21 +69,6 @@ public class IDGenerator {
         }
     }
 
-
-    /**
-     * 生成唯一id
-     *
-     * @return
-     */
-    private String createId(int stepNum) {
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        long incrCount = operations.increment("incr_count", stepNum);
-        long param = twepoch + incrCount;
-        operations.set("incrCount", incrCount + "");
-        String serialID = "" + param;
-        System.out.println(serialID);
-        return serialID;
-    }
 
     @GetMapping("/get")
     public void main() {
