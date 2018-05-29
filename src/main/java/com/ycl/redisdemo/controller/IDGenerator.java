@@ -53,32 +53,25 @@ public class IDGenerator {
                 Long.valueOf(date + "0000010"), Long.valueOf(date + "0000011"), Long.valueOf(date + "0000012")
         };
         Set<String> keys = redisTemplate.keys("adj:hostname*");
-        if (keys != null) {
-            for (String key : keys) {
-                if (("adj:hostname:" + hostName).equals(key)) {  //已存在
-                    String initValue = (String) operations.get(key);
-                    long incrCount = operations.increment("adj:"+hostName + ":incrCount", stepNum);
-                    long param = Long.valueOf(initValue) + incrCount;
-                    System.out.println(param);
-                    return "" + param;
-                }
-
-            }
-            int hostCount = keys.size();
-            {  //不存在
-                long incrCount = operations.increment("adj:"+hostName + ":incrCount", stepNum);
-                long param = initValueArray[hostCount] + incrCount;
-                operations.set("adj:hostname:" + hostName, String.valueOf(initValueArray[hostCount]));
+        for (String key : keys) { //keys不会为空的
+            if (("adj:hostname:" + hostName).equals(key)) {  //已存在
+                String initValue = (String) operations.get(key);
+                long incrCount = operations.increment("adj:" + hostName + ":incrCount", stepNum);
+                long param = Long.valueOf(initValue) + incrCount;
                 System.out.println(param);
                 return "" + param;
             }
-        } else {//第一个
-            long incrCount = operations.increment("adj:"+hostName + ":incrCount", stepNum);
-            long param = initValueArray[0] + incrCount;
-            operations.set("adj:hostname:" + hostName, String.valueOf(initValueArray[0]));
+
+        }
+        int hostCount = keys.size();
+        {  //不存在
+            long incrCount = operations.increment("adj:" + hostName + ":incrCount", stepNum);
+            long param = initValueArray[hostCount] + incrCount;
+            operations.set("adj:hostname:" + hostName, String.valueOf(initValueArray[hostCount]));
             System.out.println(param);
             return "" + param;
         }
+
     }
 
 
